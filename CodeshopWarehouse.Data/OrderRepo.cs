@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using CodeshopWarehouse.Entities;
 
-namespace CodeshopWarehouse.Data
-{
-   public interface IOrderRepo {
+namespace CodeshopWarehouse.Data {
+    public interface IOrderRepo {
         Order GetOrderById(int id);
         IEnumerable<Order> GetAllOpenOrders();
         void UpdateOrder(Order order);
         void CreateOrder(Order order); //TODO: Keep in mind that you need to use a DTO
         IEnumerable<Order> GetOrdersByProductId(int productId);
-        // test
-
-     }
-    public class OrderRepo : IOrderRepo
-    {
+    }
+    public class OrderRepo : IOrderRepo {
         private readonly IDbConnection _db;
         public OrderRepo(IDbConnection db) {
             _db = db;
