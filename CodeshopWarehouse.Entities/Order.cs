@@ -7,7 +7,7 @@ namespace CodeshopWarehouse.Entities
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int ProductQuantity { get; set; }
-        public DateTimeOffset DateProcessed { get; set; }
+        public DateTimeOffset? DateProcessed { get; set; }
         public DateTimeOffset DateCreated { get; set; }
     }
 }

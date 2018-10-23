@@ -45,6 +45,7 @@ namespace CodeshopWarehouse.Data {
                 Id = id,
                 ProductId = 124,
                 DateCreated = new DateTimeOffset(2018, 05, 18, 0, 0, 0, TimeSpan.FromSeconds(0)),
+                DateProcessed =  DateTimeOffset.Now 
             };
 
         }
