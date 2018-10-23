@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using CodeshopWarehouse.Entities;
 
 namespace CodeshopWarehouse.Data {
@@ -18,23 +19,44 @@ namespace CodeshopWarehouse.Data {
         }
 
         public void CreateOrder(Order order) {
-            throw new NotImplementedException();
+            Console.WriteLine("Order has been created it! Carry on");
         }
 
         public IEnumerable<Order> GetAllOpenOrders() {
-            throw new NotImplementedException();
+            Random random = new Random();
+
+            return new List<Order>
+           {
+
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+                GetOrderById(random.Next(1000)),
+
+            };
         }
 
         public Order GetOrderById(int id) {
-            throw new NotImplementedException();
+            return new Order {
+                Id = id,
+                ProductId = 124,
+                DateCreated = new DateTimeOffset(2018, 05, 18, 0, 0, 0, TimeSpan.FromSeconds(0)),
+            };
+
         }
 
         public IEnumerable<Order> GetOrdersByProductId(int productId) {
-            throw new NotImplementedException();
+
+            return GetAllOpenOrders();
+            
         }
 
         public void UpdateOrder(Order order) {
-            throw new NotImplementedException();
+            Console.WriteLine("Your order has been updated, carry on!");
         }
     }
 }

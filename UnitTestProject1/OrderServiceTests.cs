@@ -1,4 +1,8 @@
+using CodeshopWarehouse.Data;
+using CodeshopWarehouse.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using System;
 
 namespace CodeshopWarehouse.Business.Test {
     [TestClass]
@@ -6,27 +10,18 @@ namespace CodeshopWarehouse.Business.Test {
         [TestMethod]
         void UnresolvedFillOrdersCanBeRetrieved() {
             //arrange
-            var userOrder = new Order {
-                Id = 1
+            var order = new Order {
+                Id = 14,
+                ProductId = 124,
+                DateCreated = new DateTimeOffset(2018, 09, 21, 0, 0, 0, TimeSpan.FromSeconds(0)),
             };
 
-            var mockOrderRepo = Substitute.For<IOrderRepo>();
-            mockOrderRepo.GetOrderById(userOrder.Id).Returns(new Order {
-                Id = 1,
-                ClosedAt = null
-            });
-
-            var OrderService = new OrderService(mockOrderRepo);
 
             //act
-            var expectedOrder = OrderService.CloseOrder(userOrder);
 
             //assert
-            Assert.IsNotNull(expectedOrder.ClosedAt, "ClosedAt was not set");
-            mockOrderRepo.Received(1).GetOrderById(userOrder.Id);
-            mockOrderRepo.ReceivedWithAnyArgs(1).UpdateOrder(expectedOrder);
         }
-           
+
 
         [TestMethod]
 

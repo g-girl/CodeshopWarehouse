@@ -4,8 +4,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace CodeshopWarehouse.Business
-{
+namespace CodeshopWarehouse.Business {
     public interface IOrderService {
         Order GetOrderById(int id);
         IEnumerable<Order> GetAllOpenOrders();
@@ -20,12 +19,11 @@ namespace CodeshopWarehouse.Business
             _orderRepo = orderRepo;
         }
         public void CreateOrder(Order order) {
-             _orderRepo.CreateOrder(order);
-            
+            _orderRepo.CreateOrder(order);
         }
 
         public IEnumerable<Order> GetAllOpenOrders() {
-           var orders = _orderRepo.GetAllOpenOrders();
+            var orders = _orderRepo.GetAllOpenOrders();
             return orders;
         }
 
@@ -40,8 +38,19 @@ namespace CodeshopWarehouse.Business
         }
 
         public void UpdateOrder(Order order) {
+            var currentOrder = GetOrderById(order.Id);
+
+            if (currentOrder == null) {
+                throw new Exception("Order not found");
+            }
+
+            if (currentOrder.DateProcessed != null) {
+                throw new Exception("Order has already been processed");
+            }
+
             _orderRepo.UpdateOrder(order);
-            
+
+
         }
     }
 }
