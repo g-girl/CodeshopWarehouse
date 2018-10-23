@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using CodeshopWarehouse.Web.Models;
 
 
 namespace CodeshopWarehouse.Web
@@ -25,6 +27,9 @@ namespace CodeshopWarehouse.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddDbContext<CodeshopWarehouseWebContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("CodeshopWarehouseWebContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,7 +40,11 @@ namespace CodeshopWarehouse.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseMvc(o => o.MapRoute(
+                name: "default",
+                template: "{controller=orderView/{action=index}/{id?}")
+                );
+
         }
     }
 }
