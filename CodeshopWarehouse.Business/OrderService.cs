@@ -19,7 +19,7 @@ namespace CodeshopWarehouse.Business {
             _orderRepo = orderRepo;
         }
         public void CreateOrder(Order order) {
-            _orderRepo.CreateOrder(order);
+            _orderRepo.Create(order);
         }
 
         public IEnumerable<Order> GetAllOpenOrders() {
@@ -47,10 +47,8 @@ namespace CodeshopWarehouse.Business {
             if (currentOrder.DateProcessed != null) {
                 throw new Exception("Order has already been processed");
             }
-
-            _orderRepo.UpdateOrder(order);
-
-
+            order.DateProcessed = DateTimeOffset.Now;
+            _orderRepo.Update(order);
         }
     }
 }

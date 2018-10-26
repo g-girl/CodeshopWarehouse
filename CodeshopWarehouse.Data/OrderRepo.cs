@@ -8,8 +8,8 @@ namespace CodeshopWarehouse.Data {
     public interface IOrderRepo {
         Order GetOrderById(int id);
         IEnumerable<Order> GetAllOpenOrders();
-        void UpdateOrder(Order order);
-        void CreateOrder(Order order); //TODO: Keep in mind that you need to use a DTO
+        Order Update(Order order);
+        Order Create(Order order); //TODO: Keep in mind that you need to use a DTO
         IEnumerable<Order> GetOrdersByProductId(int productId);
     }
     public class OrderRepo : IOrderRepo {
@@ -18,46 +18,34 @@ namespace CodeshopWarehouse.Data {
             _db = db;
         }
 
-        public void CreateOrder(Order order) {
-            Console.WriteLine("Order has been created it! Carry on");
-        }
-
         public IEnumerable<Order> GetAllOpenOrders() {
-            Random random = new Random();
-
-            return new List<Order>
-           {
-
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-                GetOrderById(random.Next(1000)),
-
-            };
+            return OrdersFakeDatabase.Orders;
         }
 
         public Order GetOrderById(int id) {
-            return new Order {
-                Id = id,
-                ProductId = 124,
-                DateCreated = new DateTimeOffset(2018, 05, 18, 0, 0, 0, TimeSpan.FromSeconds(0)),
-                DateProcessed =  DateTimeOffset.Now 
-            };
+            return OrdersFakeDatabase.Orders.Find(o => o.Id == id);
 
+        }
+
+        public Order Update(Order order) {
+
+            //SQL DB find where ID == order.id Set values
+            var actualData = OrdersFakeDatabase.Orders.Find(o => o.Id == order.Id);
+            actualData.DateProcessed = order.DateProcessed;
+            return actualData;
+        }
+
+        public Order Create(Order order) {
+            order.Id = OrdersFakeDatabase.NextId;
+            OrdersFakeDatabase.NextId += 1;
+            OrdersFakeDatabase.Orders.Add(order);
+            return order;
         }
 
         public IEnumerable<Order> GetOrdersByProductId(int productId) {
 
             return GetAllOpenOrders();
             
-        }
-
-        public void UpdateOrder(Order order) {
-            Console.WriteLine("Your order has been updated, carry on!");
         }
     }
 }

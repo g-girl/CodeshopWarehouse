@@ -1,45 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CodeshopWarehouse.Business;
 using CodeshopWarehouse.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CodeshopWarehouse.Web.Controllers {
-    [Route("api/[controller]")]
+namespace Ordershack.Web.Controllers {
     public class OrdersController : Controller {
-        private readonly IOrderService _orderService;
-        public OrdersController(IOrderService orderService) {
-            _orderService = orderService;
-        }
-        // GET api/values
-        [HttpGet("{id}")]
-        public IActionResult GetOrderById(int id) {
-            return Ok(_orderService.GetOrderById(id));
+        private readonly OrderService _os;
+
+        public OrdersController(OrderService os) {
+            _os = os;
         }
 
-        [HttpGet]
-        public IActionResult GetAllOpenOrders() {
-            return Ok(_orderService.GetAllOpenOrders());
+        // GET: Orders
+        public IActionResult Index() {
+            return View(_os.GetAllOpenOrders());
         }
 
-        [HttpPut]
-        public IActionResult UpdateOrder([FromBody] Order order) {
-            _orderService.UpdateOrder(order);
-            return Ok();
+        // GET: Orders/Details/5
+        public IActionResult Details(int id) {
+            var order = _os.GetOrderById(id);
+            if (order == null) {
+                return NotFound();
+            }
+
+            return View(order);
         }
+
+        // GET: Orders/Create
+        public IActionResult Create() {
+            return View();
+        }
+
+        // POST: Orders/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Order order) {
+            order.DateCreated = DateTimeOffset.Now; 
+            if (ModelState.IsValid) {
+                _os.CreateOrder(order);
+                return RedirectToAction("Index");
+            }
+            return View(order);
+        }
+
+        //// GET: Orders/Edit/5
+        public IActionResult Edit(int id) {
+            var order = _os.GetOrderById(id);
+            if (order == null) {
+                return NotFound();
+            }
+            return View(order);
+        }
+
+        //// POST: Orders/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [FromBody] Order order) {
+        //    _os.UpdateOrder(order);
+        //    return View(order);
+        //}
 
         [HttpPost]
-        public IActionResult CreateOrder([FromBody] Order order) {
-            _orderService.CreateOrder(order);
-            return Ok();
-        } //TODO: Keep in mind that you need to use a DTO
-
-        [HttpGet ("byProductId/{productId}")]
-        public IActionResult GetOrdersByProductId(int productId) {
-            return Ok(_orderService.GetOrdersByProductId(productId));
+        public IActionResult ProcessOrder([FromForm]Order o) {
+            _os.UpdateOrder(o);
+            return RedirectToAction("Index");
         }
+
 
     }
 }
